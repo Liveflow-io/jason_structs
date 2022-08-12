@@ -13,7 +13,7 @@ defmodule JasonStructs.MixProject do
         extras: ["README.md"],
         main: "readme",
         source_ref: "v#{@version}",
-        source_url: "https://github.com/meddle0x53/jason_structs"
+        source_url: "https://github.com/liveflow-io/jason_structs"
       ],
       description:
         "A Jason plugin library that adds the ability to encode and decode structs to and from JSON",
@@ -41,8 +41,8 @@ defmodule JasonStructs.MixProject do
   defp package do
     %{
       licenses: ["MIT"],
-      maintainers: ["Nikolay Tsvetinov (Meddle)"],
-      links: %{"GitHub" => "https://github.com/meddle0x53/jason_structs"}
+      maintainers: ["Evan O'Brien (LiveFlow)"],
+      links: %{"GitHub" => "https://github.com/liveflow-io/jason_structs"}
     }
   end
 
