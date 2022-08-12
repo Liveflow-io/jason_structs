@@ -31,10 +31,10 @@ defmodule JasonStructs.MixProject do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.19", only: :dev},
-      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
-      {:jason, "~> 1.1"},
-      {:typed_struct, "~> 0.2.1"}
+      {:ex_doc, "~> 0.28", only: :dev},
+      {:dialyxir, "~> 1.2", only: [:dev], runtime: false},
+      {:jason, "~> 1.3"},
+      {:typed_struct, "~> 0.3"}
     ]
   end
 

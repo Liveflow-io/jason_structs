@@ -21,8 +21,8 @@ defmodule Jason.Structs.TypedStructPlugin do
   end
 
   @impl true
-  @spec field(atom(), any(), keyword()) :: Macro.t()
-  def field(name, type, opts) do
+  @spec field(atom(), any(), keyword(), Macro.Env.t()) :: Macro.t()
+  def field(name, type, opts, _env) do
     type =
       if is_list(type) and Enum.count(type) == 1 do
         List.first(type)
