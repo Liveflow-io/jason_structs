@@ -98,7 +98,7 @@ defmodule Jason.Structs.Struct do
               city: "Yambol",
               country: %Country{code: "bg", name: "Bulgaria"},
               street_address_line_one: "jk. Graph Ignatiev",
-              street_address_line_two: nil 
+              street_address_line_two: nil
             },
             children: nil,
             name: "Ivan Petrov"
@@ -115,7 +115,7 @@ defmodule Jason.Structs.Struct do
   defmacro __using__(_) do
     quote do
       use TypedStruct
-      import Jason.Structs.Struct, only: [jason_struct: 1]
+      import Jason.Structs.Struct, only: [jason_struct: 1, jason_struct: 2]
 
       defimpl Jason.Encoder, for: [__MODULE__] do
         @impl true
@@ -147,9 +147,9 @@ defmodule Jason.Structs.Struct do
         end
 
   """
-  defmacro jason_struct(body) do
+  defmacro jason_struct(opts \\ [], do: body) do
     quote do
-      typedstruct do
+      typedstruct unquote(opts) do
         plugin(Jason.Structs.TypedStructPlugin, this: __MODULE__)
 
         unquote(body)
