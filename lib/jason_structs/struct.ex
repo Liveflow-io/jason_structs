@@ -112,7 +112,7 @@ defmodule Jason.Structs.Struct do
   """
 
   @doc false
-  defmacro __using__(_) do
+  defmacro __using__(opts) do
     quote do
       use TypedStruct
       import Jason.Structs.Struct, only: [jason_struct: 1, jason_struct: 2]
@@ -122,6 +122,10 @@ defmodule Jason.Structs.Struct do
         def encode(data, options) do
           Jason.Structs.Encoder.encode(data, options)
         end
+      end
+
+      def exclude_nils?() do
+        Keyword.get(unquote(opts), :exclude_nils, false)
       end
     end
   end

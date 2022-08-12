@@ -19,6 +19,9 @@ defmodule Jason.Structs.Encoder do
     module = Map.get(data, :__struct__)
     to_exclude_if_nil = Kernel.apply(module, :excludable_keys, [])
 
+    always_exclude_nils? = Kernel.apply(module, :exclude_nils?, [])
+    to_exclude_if_nil = if always_exclude_nils?, do: Map.keys(data), else: to_exclude_if_nil
+
     data =
       Enum.reduce(to_exclude_if_nil, data, fn key, acc ->
         if is_nil(Map.get(acc, key)) do
