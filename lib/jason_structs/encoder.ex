@@ -17,31 +17,40 @@ defmodule Jason.Structs.Encoder do
   @spec encode(data :: map(), opts()) :: iodata()
   def encode(data, options) do
     module = Map.get(data, :__struct__)
-    to_exclude_if_nil = Kernel.apply(module, :excludable_keys, [])
 
-    always_exclude_nils? = Kernel.apply(module, :exclude_nils?, [])
-    to_exclude_if_nil = if always_exclude_nils?, do: Map.keys(data), else: to_exclude_if_nil
+    exclude_nils? = Kernel.apply(module, :exclude_nils?, [])
+    exclude_empties? = Kernel.apply(module, :exclude_empties?, [])
+
+    to_exclude_if_nil =
+      if exclude_nils?,
+        do: Map.keys(data),
+        else: Kernel.apply(module, :excludable_keys, [])
 
     data =
       Enum.reduce(to_exclude_if_nil, data, fn key, acc ->
-        if is_nil(Map.get(acc, key)) do
-          Map.delete(acc, key)
-        else
-          acc
+        case Map.get(acc, key) do
+          nil ->
+            Map.delete(acc, key)
+
+          %{} = map ->
+            if exclude_empties? and empty?(map), do: Map.delete(acc, key), else: acc
+
+          _ ->
+            acc
         end
       end)
 
-    data = Map.delete(data, :__struct__)
-
-    data =
-      data
-      |> Enum.map(fn {key, value} ->
-        {key |> Atom.to_string() |> camelize(), value}
-      end)
-      |> Map.new()
-
-    Encoder.Map.encode(data, options)
+    data
+    |> Map.from_struct()
+    |> Enum.into(%{}, fn {key, value} -> {key |> Atom.to_string() |> camelize(), value} end)
+    |> Encoder.Map.encode(options)
   end
+
+  defp empty?(%{} = struct) when is_struct(struct), do: struct |> Map.from_struct() |> empty?()
+  defp empty?(%{} = map) when map_size(map) == 0, do: true
+  defp empty?(%{} = map), do: map |> Enum.all?(fn {_, value} -> empty?(value) end)
+  defp empty?(nil), do: true
+  defp empty?(_), do: false
 
   defp camelize(str) do
     str = Macro.camelize(str)

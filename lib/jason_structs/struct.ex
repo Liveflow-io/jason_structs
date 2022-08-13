@@ -127,6 +127,10 @@ defmodule Jason.Structs.Struct do
       def exclude_nils?() do
         Keyword.get(unquote(opts), :exclude_nils, false)
       end
+
+      def exclude_empties?() do
+        Keyword.get(unquote(opts), :exclude_empties, false)
+      end
     end
   end
 
